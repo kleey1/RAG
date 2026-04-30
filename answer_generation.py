@@ -1,9 +1,8 @@
-from langchain_huggingface import HuggingFacePipeline
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.output_parsers import StrOutputParser
 from langchain_core.runnables import RunnablePassthrough
 from retrieval_pipeline import get_retriever
-from config import LLM_MODEL
+from langchain_ollama import OllamaLLM
 
 def format_docs(docs):
     """Combine retrieved documents into one context string."""
@@ -12,11 +11,7 @@ def format_docs(docs):
 def build_rag_chain():
     retriever = get_retriever()
 
-    llm = HuggingFacePipeline.from_model_id(
-        model_id=LLM_MODEL,
-        task="text-generation",
-        pipeline_kwargs={"max_new_tokens": 512}
-    )
+    llm = OllamaLLM(model="phi3")
 
     prompt = ChatPromptTemplate.from_messages([
         ("system", 
@@ -39,5 +34,5 @@ def build_rag_chain():
 
 def ask(query: str) -> str:
     chain = build_rag_chain()
-    result = chain.invoke({"input": query})
-    return result["answer"]
+    result = chain.invoke(query)
+    return result 
