@@ -3,6 +3,7 @@ from langchain_core.output_parsers import StrOutputParser
 from langchain_core.runnables import RunnablePassthrough
 from retrieval_pipeline import get_retriever
 from langchain_ollama import OllamaLLM
+from config import LLM_MODEL
 
 def format_docs(docs):
     """Combine retrieved documents into one context string."""
@@ -11,7 +12,7 @@ def format_docs(docs):
 def build_rag_chain():
     retriever = get_retriever()
 
-    llm = OllamaLLM(model="phi3")
+    llm = OllamaLLM(model=LLM_MODEL)
 
     prompt = ChatPromptTemplate.from_messages([
         ("system", 
